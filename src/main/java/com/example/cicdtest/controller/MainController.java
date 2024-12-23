@@ -1,6 +1,7 @@
 package com.example.cicdtest.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,8 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/main")
 public class MainController {
 
-    @GetMapping("/test1")
-    public String test1() {
-        return "test1";
+    @Value("${app.version}")
+    private String version;
+
+    @GetMapping("/cicd")
+    public String cicd() {
+        return "CICD!! version: " + version;
     }
 }
