@@ -72,7 +72,7 @@ jobs:
         script_stop: true
         script: |
           sudo fuser -k -n tcp 8080 || true
-          sudo nohub java -jar cicdtest.jar > ./output.log 2>&1 &
+          sudo nohup java -jar cicdtest.jar > ./output.log 2>&1 &
       
 
       
