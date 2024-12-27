@@ -51,7 +51,7 @@ jobs:
       run: mv ./build/libs/*SNAPSHOT.jar ./cicdtest.jar
 
     - name: SCP로 EC2에 빌드된 파일 전송하기
-      uses: appleboy/scp-action@v0.1.7
+      uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.USER_ID }}
