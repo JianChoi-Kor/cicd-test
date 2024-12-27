@@ -54,7 +54,7 @@ jobs:
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SERVER_IP }}
-        username: ${{ secrets.USER_ID }}
+        username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: cicdtest.jar
         target: /home/ubuntu
