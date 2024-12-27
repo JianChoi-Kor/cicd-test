@@ -34,7 +34,7 @@ jobs:
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build
+      run: ./gradlew clean build
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
@@ -47,26 +47,22 @@ jobs:
     # - name: Build with Gradle 8.9
     #   run: gradle build
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
+    - name: 빌드된 파일 이름 변경하기
+      run: mv ./build/libs/*SNAPSHOT.jar ./cicdtest.jar
+
+    - name: SCP로 EC2에 빌드된 파일 전송하기
+      uses: appleboy/scp-action@v0.1.7
       with:
-        name: cicdtest
-        path: build/libs/*.jar
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.USER_ID }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: cicdtest.jar
+        target: /home/ubuntu
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: cicdtest
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.5.4
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-    - name: SCP transfer
-      run: scp *.jar ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/home/ubuntu
     - name: Execute remote commands
       run: |
         ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "sudo fuser -k 8080/tcp"
